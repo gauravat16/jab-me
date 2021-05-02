@@ -19,7 +19,7 @@ setup_vars(){
     availability='availability.json'
     make_dirs
     get_jq
-    alias jq="$bin/jq"
+    jq="$bin/jq"
     ask_for_age
 }
 
@@ -76,7 +76,7 @@ menu_creator(){
     local jq_param="$2"
     local index=0
     local IFS=$'\n' 
-    for val in $(jq -r "$jq_param" "$json_file" ); do
+    for val in $($jq -r "$jq_param" "$json_file" ); do
         echo "$index. $val"  
         index=$((index+1))
     done
@@ -114,7 +114,7 @@ download_district_response(){
 }
 
 handle_availability(){
-    local count=$(jq -r ".centers| .[] | .sessions | .[] | select(.available_capacity > 0 )| select(.min_age_limit >= $min_age) | select(.min_age_limit <= $max_age)" $resources/$availability | wc -l)
+    local count=$($jq -r ".centers| .[] | .sessions | .[] | select(.available_capacity > 0 )| select(.min_age_limit >= $min_age) | select(.min_age_limit <= $max_age)" $resources/$availability | wc -l)
     if ! [[ -z "$count" ]]  && [[ $count -gt 0 ]];
     then
         post_notifications "$(prepare_message)"
@@ -126,7 +126,7 @@ handle_availability(){
 prepare_message(){
     local IFS=$'\n' 
     local message="Following centres are available :\n"
-    for centre in $(jq -r ".centers| .[] | select(.sessions[].available_capacity > 0 )|select(.sessions[].min_age_limit >= $min_age) | select(.sessions[].min_age_limit <= $max_age) | \"Centre Name : \(.name)\" " $resources/$availability | uniq );do
+    for centre in $($jq -r ".centers| .[] | select(.sessions[].available_capacity > 0 )|select(.sessions[].min_age_limit >= $min_age) | select(.sessions[].min_age_limit <= $max_age) | \"Centre Name : \(.name)\" " $resources/$availability | uniq );do
         message=$message" $centre\n"
     done
 
@@ -181,11 +181,11 @@ find_vaccination_centre_by_location(){
     download_states_response
     menu_creator "$resources/$states" ".states | .[] | .state_name"
 
-    local state_id="$(jq ".states | .[$global_menu_option] | .state_id" "$resources/$states")"
+    local state_id="$($jq -r ".states | .[$global_menu_option] | .state_id" "$resources/$states")"
     download_district_response "$state_id"
     menu_creator "$resources/$districts" '.districts | .[] | .district_name'
 
-    local district_id="$(jq ".districts | .[$global_menu_option] | .district_id" "$resources/$districts")"
+    local district_id="$($jq -r ".districts | .[$global_menu_option] | .district_id" "$resources/$districts")"
     download_availability_by_district_response "$district_id"  "$(date +"%d-%m-%Y")"
     handle_availability
 }
