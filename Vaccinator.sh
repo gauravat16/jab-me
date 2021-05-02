@@ -20,10 +20,9 @@ setup_vars(){
     make_dirs
     get_jq
     jq="$bin/jq"
-    ask_for_age
 }
 
-make_dirs(){
+make_dirs(){    
     mkdir -p $(pwd)/$bin
     mkdir -p $(pwd)/$resources
 }
@@ -191,9 +190,14 @@ find_vaccination_centre_by_location(){
 }
 
 find_vaccination_centre_by_pincode(){
-    clear
-    echo "Enter pincode"
-    read -r pincode
+    if [[ -z $1 ]];
+    then
+        clear
+        echo "Enter pincode"
+        read -r pincode
+    else
+        pincode="$1"
+    fi
     
     if [[ -z "$pincode" ]] && ! [[ $pincode =~ '^[0-9]+$' ]];
     then
@@ -208,7 +212,78 @@ find_vaccination_centre_by_pincode(){
 
 init(){
     setup_vars
-    ask_for_location   
+    local usage="Usage --m: mode, --pincode: pincode for the centre, --district: district code (To get this number please run the script in manual mode and check resources/district.json"
+    local location_mode=
+    local pincode=
+    local district_id=
+
+    if [ "$#" -eq 0 ];
+    then
+        echo $usage
+    fi
+
+    for option;
+    do
+        case "$prev_option" in
+            '--m')
+                case $option in 
+                    'A')
+                        echo "Script in AutoMode!"
+                    ;;
+
+                    'M')
+                        ask_for_age
+                        ask_for_location
+                        exit
+                    ;;
+
+                    *)
+                    echo "Usage M: Manual input, A: Automatic"
+                    ;;
+                esac
+            ;;
+            '--pincode')
+                location_mode='P'
+                pincode="$option"
+            ;;
+
+            '--district')
+                location_mode='D'
+                district_id="$option"
+            ;;
+
+            '--age-min')
+                min_age=$option
+            ;;
+
+            '--age-max')
+                max_age=$option
+            ;;
+
+            "")
+            ;;
+
+            '--h')
+            echo $usage
+            ;;
+        esac
+        
+        prev_option="$option"
+        
+    done
+
+
+    case $location_mode in
+        'P')
+            find_vaccination_centre_by_pincode "$pincode"
+        ;;
+        'D')
+            download_availability_by_district_response "$district_id"  "$(date +"%d-%m-%Y")"
+            handle_availability
+        ;;
+        *)
+        ;;
+    esac    
 }
 
-init
+init "$@"
