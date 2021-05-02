@@ -212,14 +212,20 @@ find_vaccination_centre_by_pincode(){
 
 init(){
     setup_vars
-    local usage="Usage --m: mode, --pincode: pincode for the centre, --district: district code (To get this number please run the script in manual mode and check resources/district.json"
+    local usage="Usage
+--m: mode,
+--pincode: pincode for the centre,
+--district: district code (To get this number please run the script in manual mode and check resources/district.json
+--age-max: Max age for vaccination
+--h: help"
     local location_mode=
     local pincode=
     local district_id=
+    min_age=18
 
     if [ "$#" -eq 0 ];
     then
-        echo $usage
+        printf "$usage"
     fi
 
     for option;
@@ -250,10 +256,6 @@ init(){
             '--district')
                 location_mode='D'
                 district_id="$option"
-            ;;
-
-            '--age-min')
-                min_age=$option
             ;;
 
             '--age-max')
