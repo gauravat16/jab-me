@@ -118,7 +118,7 @@ handle_availability(){
     then
         post_notifications "$(prepare_message)"
     else
-        post_notifications "No Vaccination Centre found!"
+        echo "No Vaccination Centre found!"
     fi
 }
 
