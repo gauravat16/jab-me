@@ -34,8 +34,8 @@ bash  Vaccinator.sh --m A --district 650 --age-max 999
 **Add a Cron**
 
 1. Crontab -e
-2. * * * * * cd <path-to-this-dir>/jab-me && bash Vaccinator.sh --m A --district 312 --age-max 44
-3. ex : * * * * * cd /Users/gaurav.js/scripts/jab-me && bash Vaccinator.sh --m A --district 312 --age-max 44
+2. `* * * * * cd <path-to-this-dir>/jab-me && bash Vaccinator.sh --m A --district 312 --age-max 44`
+3. ex : `* * * * * cd /Users/gaurav.js/scripts/jab-me && bash Vaccinator.sh --m A --district 312 --age-max 44`
 
 
 
