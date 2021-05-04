@@ -1,6 +1,8 @@
 # jab-me
 **Get your damn vaccine on time by a notification reminder.**
 
+**NOTE: Only tested on macOS and Ubuntu.**
+
 ![NOTIF_EX](https://github.com/gauravat16/jab-me/blob/master/screenshots/notif-ex.png)
 
 **Usage**
