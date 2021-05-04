@@ -43,6 +43,11 @@ get_jq(){
                 mv jq-osx-amd64 jq
                 
             ;;
+
+            MinGw)
+                wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-win64.exe
+                mv jq-win64.exe jq
+            ;;
             
         esac
         
