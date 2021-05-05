@@ -17,6 +17,7 @@ setup_vars(){
     districts='districts.json'
     states='states.json'
     availability='availability.json'
+    notif='DESKTOP'
     make_dirs
     get_jq
     jq="$bin/jq"
@@ -55,17 +56,33 @@ get_jq(){
 
 post_notifications(){
     
-    case $machine in
-        Linux)
-            notify-send -i "$1"
+    case "$notif" in
+        "DESKTOP")
+
+        case $machine in
+            Linux)
+                notify-send -i "$1"
+            ;;
+            
+            Mac)
+                command="display notification \"$1\" with title \"Jab Me\" "
+                osascript -e "$command"  
+            ;;
+            
+        esac
         ;;
-        
-        Mac)
-            command="display notification \"$1\" with title \"Jab Me\" "
-            osascript -e "$command"  
+
+        "TELEGRAM")
+            curl --location --request POST 'https://api.telegram.org/bot1725093954:AAGSY0yhd3IjrJ8fdfXcbp7p0eNtde_bFoI/sendMessage' \
+        --header 'Content-Type: application/json' \
+        --data-raw "{
+                        \"chat_id\": -1001408368095,
+                        \"text\": \"$1\"
+        }"
         ;;
-        
-    esac
+        esac
+
+
 }
 
 
@@ -92,24 +109,64 @@ menu_creator(){
 
 
 download_states_response(){
-    echo "$(curl -s -G "https://cdn-api.co-vin.in/api/v2/admin/location/states")" > $resources/$states
+    echo "$(curl -s -G "https://cdn-api.co-vin.in/api/v2/admin/location/states"  -H 'sec-ch-ua: " Not A;Brand";v="99", "Chromium";v="90", "Google Chrome";v="90"' \
+  -H 'accept: application/json' \
+  -H 'dnt: 1' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36' \
+  -H 'origin: https://apisetu.gov.in' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'referer: https://apisetu.gov.in/public/marketplace/api/cowin' \
+  -H 'accept-language: en-IN,en;q=0.9,en-GB;q=0.8,en-US;q=0.7,hi;q=0.6' )" > $resources/$states
 }
 
 download_availability_by_district_response(){
     local district="$1"
     local date="$2"
-    echo "$(curl -s -G "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=$district&date=$date")" > $resources/$availability
+    echo "$(curl -s -G "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=$district&date=$date"   -H 'sec-ch-ua: " Not A;Brand";v="99", "Chromium";v="90", "Google Chrome";v="90"' \
+  -H 'accept: application/json' \
+  -H 'dnt: 1' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36' \
+  -H 'origin: https://apisetu.gov.in' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'referer: https://apisetu.gov.in/public/marketplace/api/cowin' \
+  -H 'accept-language: en-IN,en;q=0.9,en-GB;q=0.8,en-US;q=0.7,hi;q=0.6' )" > $resources/$availability
 }
 
 download_availability_by_pincode_response(){
     local pincode="$1"
     local date="$2"
-    echo "$(curl -s -G "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=$pincode&date=$date")" > $resources/$availability
+    echo "$(curl -s -G "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=$pincode&date=$date"   -H 'sec-ch-ua: " Not A;Brand";v="99", "Chromium";v="90", "Google Chrome";v="90"' \
+  -H 'accept: application/json' \
+  -H 'dnt: 1' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36' \
+  -H 'origin: https://apisetu.gov.in' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'referer: https://apisetu.gov.in/public/marketplace/api/cowin' \
+  -H 'accept-language: en-IN,en;q=0.9,en-GB;q=0.8,en-US;q=0.7,hi;q=0.6' )" > $resources/$availability
 }
 
 download_district_response(){
     local state="$1"
-    echo "$(curl -s -G "https://cdn-api.co-vin.in/api/v2/admin/location/districts/$state")" > $resources/$districts
+    echo "$(curl -s -G "https://cdn-api.co-vin.in/api/v2/admin/location/districts/$state"   -H 'sec-ch-ua: " Not A;Brand";v="99", "Chromium";v="90", "Google Chrome";v="90"' \
+  -H 'accept: application/json' \
+  -H 'dnt: 1' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36' \
+  -H 'origin: https://apisetu.gov.in' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'referer: https://apisetu.gov.in/public/marketplace/api/cowin' \
+  -H 'accept-language: en-IN,en;q=0.9,en-GB;q=0.8,en-US;q=0.7,hi;q=0.6' )" > $resources/$districts
 }
 
 handle_availability(){
@@ -124,7 +181,9 @@ handle_availability(){
 
 prepare_message(){
     local IFS=$'\n' 
-    local message="Following centres are available :\n"
+
+    local message="Status Requested by : $(hostname) for age group ($min_age - $max_age)\n"
+    message=$message"Following centres are available :\n"
     for centre in $($jq -r ".centers| .[] | select(.sessions[].available_capacity > 0 )|select(.sessions[].min_age_limit >= $min_age) | select(.sessions[].min_age_limit <= $max_age) | \"Centre Name : \(.name)\" " $resources/$availability | uniq );do
         message=$message" $centre\n"
     done
@@ -217,7 +276,8 @@ init(){
 --pincode: pincode for the centre,
 --district: district code (To get this number please run the script in manual mode and check resources/district.json
 --age-max: Max age for vaccination
---h: help"
+--h: help
+--notif: Notification Options: Desktop notifications (DESKTOP) (Deafult) or Telegram (TELEGRAM) "
     local location_mode=
     local pincode=
     local district_id=
@@ -260,6 +320,10 @@ init(){
 
             '--age-max')
                 max_age=$option
+            ;;
+
+            '--notif')
+                notif=$option
             ;;
 
             "")
