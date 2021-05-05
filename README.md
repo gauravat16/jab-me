@@ -3,8 +3,6 @@
 
 **NOTE: Only tested on macOS and Ubuntu.**
 
-![NOTIF_EX](https://github.com/gauravat16/jab-me/blob/master/screenshots/notif-ex.png)
-
 ## Telegram Support
 I have created a telegram channel where this script will post the notification.
 
@@ -14,6 +12,10 @@ Please be respectful of others and of the cowin platform and don't set up cron f
 
 
 `bash    Vaccinator.sh --m A --pincode 201010 --age-max 99 --notif TELEGRAM`
+
+## Desktop notification (Macos & Ubuntu)
+
+![NOTIF_EX](https://github.com/gauravat16/jab-me/blob/master/screenshots/notif-ex.png)
 
 **Usage**
 
