@@ -173,7 +173,7 @@ handle_availability(){
     local count=$($jq -r ".centers| .[] | .sessions | .[] | select(.available_capacity > 0 )| select(.min_age_limit >= $min_age) | select(.min_age_limit <= $max_age)" $resources/$availability | wc -l)
     if ! [[ -z "$count" ]]  && [[ $count -gt 0 ]];
     then
-        post_notifications "$(prepare_message)"
+        post_notifications "$(echo "$(prepare_message)" | cut -c 1-1000)......."
     else
         echo "No Vaccination Centre found!"
     fi
