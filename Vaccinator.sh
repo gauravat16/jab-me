@@ -181,10 +181,11 @@ handle_availability(){
 
 prepare_message(){
     local IFS=$'\n' 
+    local state="$1"
 
     local message="Status Requested by : $(hostname) for age group ($min_age - $max_age)\n"
     message=$message"Following centres are available :\n"
-    for centre in $($jq -r ".centers| .[] | select(.sessions[].available_capacity > 0 )|select(.sessions[].min_age_limit >= $min_age) | select(.sessions[].min_age_limit <= $max_age) | \"Centre Name : \(.name)\" " $resources/$availability | uniq );do
+    for centre in $($jq -r ".centers| .[] | select(.sessions[].available_capacity > 0 )|select(.sessions[].min_age_limit >= $min_age) | select(.sessions[].min_age_limit <= $max_age) | \"Centre Name : \(.name) [State : \(.state_name) District : \(.district_name)] \" " $resources/$availability | uniq );do
         message=$message" $centre\n"
     done
 
@@ -341,7 +342,7 @@ init(){
                         esac                        
                     ;;
 
-                    'M')
+                    'M') 
                         ask_for_age
                         ask_for_location
                     ;;
