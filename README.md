@@ -9,6 +9,7 @@
 I have created a telegram channel where this script will post the notification.
 
 Link : https://t.me/jab_me
+
 Please be respectful of others and of the cowin platform and don't set up cron for every minute!
 
 
