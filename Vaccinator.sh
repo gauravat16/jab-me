@@ -205,7 +205,7 @@ ask_for_age(){
         min_age=18
         ;;
       2)
-        max_age=9999
+        max_age=99
         min_age=45
         ;;
       *)
@@ -281,6 +281,7 @@ init(){
     local location_mode=
     local pincode=
     local district_id=
+    local mode=
     min_age=18
 
     if [ "$#" -eq 0 ];
@@ -292,21 +293,7 @@ init(){
     do
         case "$prev_option" in
             '--m')
-                case $option in 
-                    'A')
-                        echo "Script in AutoMode!"
-                    ;;
-
-                    'M')
-                        ask_for_age
-                        ask_for_location
-                        exit
-                    ;;
-
-                    *)
-                    echo "Usage M: Manual input, A: Automatic"
-                    ;;
-                esac
+                mode=$option
             ;;
             '--pincode')
                 location_mode='P'
@@ -338,18 +325,33 @@ init(){
         
     done
 
+            case $mode in     
+                    'A')
+                        echo "Script in AutoMode!"
+                        case $location_mode in
+                            'P')
+                                find_vaccination_centre_by_pincode "$pincode"
+                            ;;
+                            'D')
+                                download_availability_by_district_response "$district_id"  "$(date +"%d-%m-%Y")"
+                                handle_availability
+                            ;;
+                            *)
+                            ;;
+                        esac                        
+                    ;;
 
-    case $location_mode in
-        'P')
-            find_vaccination_centre_by_pincode "$pincode"
-        ;;
-        'D')
-            download_availability_by_district_response "$district_id"  "$(date +"%d-%m-%Y")"
-            handle_availability
-        ;;
-        *)
-        ;;
-    esac    
+                    'M')
+                        ask_for_age
+                        ask_for_location
+                    ;;
+
+                    *)
+                    echo "Usage M: Manual input, A: Automatic"
+                    ;;
+            esac
+
+   
 }
 
 init "$@"
