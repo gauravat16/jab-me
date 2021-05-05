@@ -15,8 +15,9 @@
 
 --age-max: Max age for vaccination
 
---h: help
+--notif: Notification Options: Desktop notifications (DESKTOP) (Deafult) or Telegram (TELEGRAM)
 
+--h: help
 
 
 **Via Pincode**
@@ -38,6 +39,13 @@ bash  Vaccinator.sh --m A --district 650 --age-max 999
 1. Crontab -e
 2. `* * * * * cd <path-to-this-dir>/jab-me && bash Vaccinator.sh --m A --district 312 --age-max 44`
 3. ex : `* * * * * cd /Users/gaurav.js/scripts/jab-me && bash Vaccinator.sh --m A --district 312 --age-max 44`
+
+**Telegram Support**
+I have created a telegram channel where this script will post the notification.
+Link : https://t.me/jab_me
+
+`bash    Vaccinator.sh --m A --pincode 201010 --age-max 99 --notif TELEGRAM`
+
 
 
 
