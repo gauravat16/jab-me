@@ -1,6 +1,21 @@
 #!/bin/bash
 
 setup_env(){
+    if ! [ -x "$(command -v wget)" ]; then
+        echo 'Error: wget is not installed. Install via a package manager.'
+        exit
+    fi
+
+    if ! [ -x "$(command -v curl)" ]; then
+        echo 'Error: curl is not installed. Install via a package manager.'
+        exit
+    fi
+
+    if ! [ -x "$(command -v jq)" ]; then
+        echo 'Error: jq is not installed. Install via a package manager.'
+        exit
+    fi
+
     unameOut="$(uname -s)"
     case "${unameOut}" in
         Linux*)     machine=Linux;;
@@ -19,40 +34,12 @@ setup_vars(){
     availability='availability.json'
     notif='DESKTOP'
     make_dirs
-    get_jq
-    jq="$bin/jq"
 }
 
 make_dirs(){    
     mkdir -p $(pwd)/$bin
     mkdir -p $(pwd)/$resources
 }
-
-get_jq(){
-    curr_path="$(pwd)"
-    cd $bin
-    if [[ ! -f jq ]]
-    then
-        case $machine in
-            Linux)
-                wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
-                mv jq-linux64 jq
-            ;;
-            
-            Mac)
-                wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-osx-amd64
-                mv jq-osx-amd64 jq
-                
-            ;;
-            
-        esac
-        
-        chmod u+x jq
-    fi
-    
-    cd $curr_path
-}
-
 
 post_notifications(){
     
@@ -92,7 +79,7 @@ menu_creator(){
     local jq_param="$2"
     local index=0
     local IFS=$'\n' 
-    for val in $($jq -r "$jq_param" "$json_file" ); do
+    for val in $(jq -r "$jq_param" "$json_file" ); do
         echo "$index. $val"  
         index=$((index+1))
     done
@@ -170,7 +157,7 @@ download_district_response(){
 }
 
 handle_availability(){
-    local count=$($jq -r ".centers| .[] | .sessions | .[] | select(.available_capacity > 0 )| select(.min_age_limit >= $min_age) | select(.min_age_limit <= $max_age)" $resources/$availability | wc -l)
+    local count=$(jq -r ".centers| .[] | .sessions | .[] | select(.available_capacity > 0 )| select(.min_age_limit >= $min_age) | select(.min_age_limit <= $max_age)" $resources/$availability | wc -l)
     if ! [[ -z "$count" ]]  && [[ $count -gt 0 ]];
     then
         post_notifications "$(echo "$(prepare_message)" | cut -c 1-1000)......."
@@ -185,7 +172,7 @@ prepare_message(){
 
     local message="Status Requested by : $(hostname) for age group ($min_age - $max_age)\n"
     message=$message"Following centres are available :\n"
-    for centre in $($jq -r ".centers| .[] | select(.sessions[].available_capacity > 0 )|select(.sessions[].min_age_limit >= $min_age) | select(.sessions[].min_age_limit <= $max_age) | \"Centre Name : \(.name) [State : \(.state_name) District : \(.district_name)] \" " $resources/$availability | uniq );do
+    for centre in $(jq -r ".centers| .[] | select(.sessions[].available_capacity > 0 )|select(.sessions[].min_age_limit >= $min_age) | select(.sessions[].min_age_limit <= $max_age) | \"Centre Name : \(.name) [State : \(.state_name) District : \(.district_name)] \" " $resources/$availability | uniq );do
         message=$message" $centre\n"
     done
 
@@ -240,11 +227,11 @@ find_vaccination_centre_by_location(){
     download_states_response
     menu_creator "$resources/$states" ".states | .[] | .state_name"
 
-    local state_id="$($jq -r ".states | .[$global_menu_option] | .state_id" "$resources/$states")"
+    local state_id="$(jq -r ".states | .[$global_menu_option] | .state_id" "$resources/$states")"
     download_district_response "$state_id"
     menu_creator "$resources/$districts" '.districts | .[] | .district_name'
 
-    local district_id="$($jq -r ".districts | .[$global_menu_option] | .district_id" "$resources/$districts")"
+    local district_id="$(jq -r ".districts | .[$global_menu_option] | .district_id" "$resources/$districts")"
     download_availability_by_district_response "$district_id"  "$(date +"%d-%m-%Y")"
     handle_availability
 }
