@@ -285,12 +285,12 @@ init(){
             ;;
             '--pincode')
                 location_mode='P'
-                pincode="$option"
+                pincode=$option
             ;;
 
             '--district')
                 location_mode='D'
-                district_id="$option"
+                district_id=$option
             ;;
 
             '--age-max')
@@ -318,11 +318,17 @@ init(){
                         echo "Script in AutoMode!"
                         case $location_mode in
                             'P')
-                                find_vaccination_centre_by_pincode "$pincode"
+                                for element in ${pincode//,/ }
+                                do
+                                    find_vaccination_centre_by_pincode "$element"
+                                done
                             ;;
                             'D')
-                                download_availability_by_district_response "$district_id"  "$(date +"%d-%m-%Y")"
-                                handle_availability
+                                for element in ${district_id//,/ }
+                                do
+                                    download_availability_by_district_response "$element"  "$(date +"%d-%m-%Y")"
+                                    handle_availability
+                                done
                             ;;
                             *)
                             ;;
