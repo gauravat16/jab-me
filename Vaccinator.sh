@@ -26,9 +26,11 @@ setup_env(){
     esac
 }
 setup_vars(){
+    local hash="$1"
+
     setup_env
-    resources="resources"
-    bin="bin"
+    resources="$(pwd)/resources/$hash"
+    bin="$(pwd)/bin"
     districts='districts.json'
     states='states.json'
     availability='availability.json'
@@ -37,8 +39,8 @@ setup_vars(){
 }
 
 make_dirs(){    
-    mkdir -p $(pwd)/$bin
-    mkdir -p $(pwd)/$resources
+    mkdir -p $bin
+    mkdir -p $resources
 }
 
 post_notifications(){
@@ -171,7 +173,7 @@ prepare_message(){
     local state="$1"
 
     local message="Status Requested by : $(hostname) for age group ($min_age - $max_age)\n"
-    message=$message"Following centres are available :\n"
+    message=$message"Following centres are available :\n\n"
     for centre in $(jq -r ".centers| .[] | select(.sessions[].available_capacity > 0 )|select(.sessions[].min_age_limit >= $min_age) | select(.sessions[].min_age_limit <= $max_age) | \"Centre Name : \(.name) [State : \(.state_name) District : \(.district_name)] \" " $resources/$availability | uniq );do
         message=$message" $centre\n"
     done
@@ -258,7 +260,10 @@ find_vaccination_centre_by_pincode(){
 
 
 init(){
-    setup_vars
+
+    hash=$(echo "$@" | shasum)
+    setup_vars $hash
+
     local usage="Usage
 --m: mode,
 --pincode: pincode for the centre,
