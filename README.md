@@ -34,7 +34,10 @@ Please be respectful of others and of the cowin platform and don't set up cron f
 
 **Via Pincode**
 
-bash  Vaccinator.sh --m A --pincode 201014 --age-max 44
+`bash  Vaccinator.sh --m A --pincode 201014 --age-max 44`
+
+`bash  Vaccinator.sh --m A --pincode 201014,201012,201010 --age-max 44`
+
 
 **Via District id**
 
@@ -44,7 +47,10 @@ How to find the district id?
 2. Follow the steps till the end.
 3. cat resources/districts.json | grep -i 'District-Name'  ex : cat resources/districts.json | grep -i 'Ghaziabad'
 
-bash  Vaccinator.sh --m A --district 650 --age-max 999
+`bash  Vaccinator.sh --m A --district 650 --age-max 999`
+
+`bash  Vaccinator.sh --m A --district 650,651,652 --age-max 999`
+
 
 **Add a Cron**
 
