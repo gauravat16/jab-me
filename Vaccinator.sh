@@ -162,7 +162,7 @@ handle_availability(){
     local count=$(jq -r ".centers| .[] | .sessions | .[] | select(.available_capacity > 0 )| select(.min_age_limit >= $min_age) | select(.min_age_limit <= $max_age)" $resources/$availability | wc -l)
     if ! [[ -z "$count" ]]  && [[ $count -gt 0 ]];
     then
-        post_notifications "$(echo "$(prepare_message)" | cut -c 1-1000)......."
+        post_notifications "$(echo "$(prepare_message)" | cut -c 1-1000)...."
     else
         echo "No Vaccination Centre found!"
     fi
@@ -170,9 +170,8 @@ handle_availability(){
 
 prepare_message(){
     local IFS=$'\n' 
-    local state="$1"
-
-    local message="Status Requested by : $(hostname) for age group ($min_age - $max_age)\n"
+    local state="$(jq -r ".centers| .[0] | .state_name" $resources/$availability)"
+    local message="Status Requested by : $(hostname) for **State $state** & **age group ($min_age - $max_age)**\n"
     message=$message"Following centres are available :\n\n"
     for centre in $(jq -r ".centers| .[] | select(.sessions[].available_capacity > 0 )|select(.sessions[].min_age_limit >= $min_age) | select(.sessions[].min_age_limit <= $max_age) | \"Centre Name : \(.name) [State : \(.state_name) District : \(.district_name)] \" " $resources/$availability | uniq );do
         message=$message" $centre\n"
@@ -349,8 +348,6 @@ init(){
                     echo "Usage M: Manual input, A: Automatic"
                     ;;
             esac
-
-   
 }
 
 init "$@"
