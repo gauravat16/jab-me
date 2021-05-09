@@ -35,7 +35,7 @@ setup_vars() {
     states='states.json'
     availability='availability.json'
     notif='DESKTOP'
-    chat_id='-1001329389995'
+    chat_id='-1001408368095'
     make_dirs
 }
 
