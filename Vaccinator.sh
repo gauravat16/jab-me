@@ -66,7 +66,8 @@ post_notifications(){
         --header 'Content-Type: application/json' \
         --data-raw "{
                         \"chat_id\": -1001408368095,
-                        \"text\": \"$1\"
+                        \"text\": \"$1\",
+                        \"parse_mode\": \"Markdown\"
         }"
         ;;
         esac
@@ -171,7 +172,7 @@ handle_availability(){
 prepare_message(){
     local IFS=$'\n' 
     local state="$(jq -r ".centers| .[0] | .state_name" $resources/$availability)"
-    local message="Status Requested by : $(hostname) for **State $state** & **age group ($min_age - $max_age)**\n"
+    local message="Status Requested by : $(hostname) for *State: $state* & *Age Group: ($min_age - $max_age)*\n"
     message=$message"Following centres are available :\n\n"
     for centre in $(jq -r ".centers| .[] | select(.sessions[].available_capacity > 0 )|select(.sessions[].min_age_limit >= $min_age) | select(.sessions[].min_age_limit <= $max_age) | \"Centre Name : \(.name) [State : \(.state_name) District : \(.district_name)] \" " $resources/$availability | uniq );do
         message=$message" $centre\n"
