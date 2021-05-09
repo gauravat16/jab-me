@@ -35,6 +35,7 @@ setup_vars() {
     states='states.json'
     availability='availability.json'
     notif='DESKTOP'
+    chat_id='-1001329389995'
     make_dirs
 }
 
@@ -62,16 +63,25 @@ post_notifications() {
         ;;
 
     "TELEGRAM")
-        curl --location --request POST 'https://api.telegram.org/bot1725093954:AAGSY0yhd3IjrJ8fdfXcbp7p0eNtde_bFoI/sendMessage' \
+        local resp=$(curl -sb --request POST 'https://api.telegram.org/bot1725093954:AAGSY0yhd3IjrJ8fdfXcbp7p0eNtde_bFoI/sendMessage' \
             --header 'Content-Type: application/json' \
             --data-raw "{
-                        \"chat_id\": -1001408368095,
+                        \"chat_id\": $chat_id,
                         \"text\": \"$1\",
                         \"parse_mode\": \"Markdown\"
-        }"
+        }")
+
+        local msg_id="$(echo "$resp" | jq -r ".result|.message_id")"
+        delete_message "$(($msg_id+1))"
         ;;
     esac
 
+}
+
+delete_message(){
+    local msg_id="$1"
+
+    curl --location --request GET "https://api.telegram.org/bot1725093954:AAGSY0yhd3IjrJ8fdfXcbp7p0eNtde_bFoI/deleteMessage?chat_id=$chat_id&message_id=$msg_id" 
 }
 
 menu_creator() {
