@@ -63,7 +63,7 @@ post_notifications() {
         ;;
 
     "TELEGRAM")
-        local resp=$(curl -sb --request POST 'https://api.telegram.org/bot1725093954:AAGSY0yhd3IjrJ8fdfXcbp7p0eNtde_bFoI/sendMessage' \
+        local resp=$(curl -sb --request POST 'https://api.telegram.org/bot1725093954:AAEL1cifQaeG5Sdt2XK1Q5IIzCl6ktEXD7w/sendMessage' \
             --header 'Content-Type: application/json' \
             --data-raw "{
                         \"chat_id\": $chat_id,
@@ -71,8 +71,8 @@ post_notifications() {
                         \"parse_mode\": \"Markdown\"
         }")
 
-        local msg_id="$(echo "$resp" | jq -r ".result|.message_id")"
-        delete_message "$(($msg_id+1))"
+        # local msg_id="$(echo "$resp" | jq -r ".result|.message_id")"
+        # delete_message "$(($msg_id+1))"
         ;;
     esac
 
@@ -81,7 +81,7 @@ post_notifications() {
 delete_message(){
     local msg_id="$1"
 
-    curl --location --request GET "https://api.telegram.org/bot1725093954:AAGSY0yhd3IjrJ8fdfXcbp7p0eNtde_bFoI/deleteMessage?chat_id=$chat_id&message_id=$msg_id" 
+    curl --location --request GET "https://api.telegram.org/bot1725093954:AAEL1cifQaeG5Sdt2XK1Q5IIzCl6ktEXD7w/deleteMessage?chat_id=$chat_id&message_id=$msg_id" 
 }
 
 menu_creator() {
