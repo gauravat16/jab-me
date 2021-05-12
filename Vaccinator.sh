@@ -78,10 +78,10 @@ post_notifications() {
 
 }
 
-delete_message(){
+delete_message() {
     local msg_id="$1"
 
-    curl --location --request GET "https://api.telegram.org/bot1725093954:AAEL1cifQaeG5Sdt2XK1Q5IIzCl6ktEXD7w/deleteMessage?chat_id=$chat_id&message_id=$msg_id" 
+    curl --location --request GET "https://api.telegram.org/bot1725093954:AAEL1cifQaeG5Sdt2XK1Q5IIzCl6ktEXD7w/deleteMessage?chat_id=$chat_id&message_id=$msg_id"
 }
 
 menu_creator() {
@@ -177,7 +177,8 @@ handle_availability() {
 prepare_message() {
     local IFS=$'\n'
     local state="$(jq -r ".centers| .[0] | .state_name" $resources/$availability)"
-    local message="Status Requested by : $(hostname) for *State: $state* & *Age Group: ($min_age - $max_age)*\n"
+    local district="$(jq -r ".centers| .[0] | .district_name" $resources/$availability)"
+    local message="$(hostname) says: *State: $state* & *District : $district* & *Age Group: ($min_age+)*\n"
     message=$message"Following centres are available :\n\n"
     for centre in $(jq -r ".centers| .[] | select(.sessions[].available_capacity > 0 )|select(.sessions[].min_age_limit >= $min_age) | select(.sessions[].min_age_limit <= $max_age) | \"Centre Name : \(.name) [State : \(.state_name) District : \(.district_name)] \" " $resources/$availability | uniq); do
         message=$message" $centre\n"
@@ -319,6 +320,16 @@ init() {
         prev_option="$option"
 
     done
+
+    if [[ "$max_age" -le 44 ]];
+        then
+            min_age=18
+    fi
+
+    if [[ "$max_age" -gt 44 ]];
+        then
+            min_age=45
+    fi
 
     case $mode in
     'A')
