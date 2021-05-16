@@ -1,7 +1,7 @@
 # jab-me
 **Get your damn vaccine on time by a notification reminder.**
 
-**NOTE: Only tested on macOS and Ubuntu.**
+**NOTE: Script works on any `*nix` platform but desktop Notification Only tested on macOS and Ubuntu.**
 
 ## Telegram Support
 I have created a telegram channel where this script will post the notification.
