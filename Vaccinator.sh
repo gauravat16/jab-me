@@ -178,7 +178,7 @@ prepare_message() {
     local IFS=$'\n'
     local state="$(jq -r ".centers| .[0] | .state_name" $resources/$availability)"
     local district="$(jq -r ".centers| .[0] | .district_name" $resources/$availability)"
-    local message="$(hostname) says: *State: $state* & *District : $district* & *Age Group: ($min_age+)*\n"
+    local message="$(hostname) says: *State: #$state* & *District : #$district* & *Age Group: ($min_age+)*\n"
     message=$message"Following centres are available :\n\n"
     for centre in $(jq -r ".centers| .[] | select(.sessions[].available_capacity > 0 )|select(.sessions[].min_age_limit >= $min_age) | select(.sessions[].min_age_limit <= $max_age) | \"Centre Name : \(.name) [State : \(.state_name) District : \(.district_name)] \" " $resources/$availability | uniq); do
         message=$message" $centre\n"
