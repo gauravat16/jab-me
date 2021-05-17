@@ -1,12 +1,15 @@
 # jab-me
 **Get your damn vaccine on time by a notification reminder.**
 
-**NOTE: Only tested on macOS and Ubuntu.**
+**NOTE: Script works on any `*nix` platform but desktop Notification Only tested on macOS and Ubuntu.**
 
 ## Telegram Support
 I have created a telegram channel where this script will post the notification.
 
 Link : https://t.me/jab_me
+
+<img src="https://github.com/gauravat16/jab-me/blob/master/screenshots/telegram.png" width="500" height="600">
+
 
 Please be respectful of others and of the cowin platform and don't set up cron for every minute!
 
@@ -15,7 +18,8 @@ Please be respectful of others and of the cowin platform and don't set up cron f
 
 ## Desktop notification (Macos & Ubuntu)
 
-![NOTIF_EX](https://github.com/gauravat16/jab-me/blob/master/screenshots/notif-ex.png)
+<img src="https://github.com/gauravat16/jab-me/blob/master/screenshots/notif-ex.png" width="300" height="100">
+
 
 **Usage**
 
