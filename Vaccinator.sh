@@ -36,7 +36,7 @@ setup_vars() {
     availability='availability.json'
     notif='DESKTOP'
     chat_id='-1001408368095'
-    token="1725093954:AAFfb6b8qdF8offkLICH8dLAmpFjxXBEWsY"
+    token="1725093954:AAF3AAa-2hiOoXX_Ur7gIcN1ZJip28BxqhA"
     make_dirs
 }
 
